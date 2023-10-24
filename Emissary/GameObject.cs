@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Emissary
 {
     /// <summary>
-    /// Abstract class for anything that exists in the game
+    /// Abstract class for anything that exists in the game. >>Does NOT use the Rectangle struct<<
     /// </summary>
     public abstract class GameObject
     {
@@ -25,6 +25,17 @@ namespace Emissary
         {
             get { return position; }
             set { position = value; }
+        }
+
+        public float X
+        {
+            get { return position.X; }
+            set { position.X = value; }
+        }
+        public float Y
+        {
+            get { return position.Y; }
+            set { position.Y = value; }
         }
 
         //Constructors:

@@ -28,9 +28,7 @@ namespace Emissary
     /// </summary>
     public class Player : GameObject
     {
-
         //Fields:
-
         //movement fields
         private Vector2 velocity;
         private Vector2 direction;
@@ -40,6 +38,7 @@ namespace Emissary
 
         //Animation fields
         private AnimationState aState;
+        private byte animationFrames;
 
         //Properties:
 
@@ -53,6 +52,7 @@ namespace Emissary
             velocity = new Vector2(5, 5);
             direction = Vector2.Zero;
             aState = AnimationState.Idle;
+            animationFrames = 1;
         }
 
         //Methods:
@@ -62,23 +62,6 @@ namespace Emissary
         public override void Update()
         {
             kbState = Keyboard.GetState();
-
-            //setting x direction based on input
-            if (kbState.IsKeyDown(Keys.A))
-            {
-                direction.X = -1;
-                aState = AnimationState.WalkingLeft;
-            }
-            else if (kbState.IsKeyDown(Keys.D))
-            {
-                direction.X = 1;
-                aState = AnimationState.WalkingRight;
-            }
-            else 
-            { 
-                direction.X = 0;
-                aState = AnimationState.Idle;
-            }
 
             //setting y direction based on input
             if (kbState.IsKeyDown(Keys.W))
@@ -93,9 +76,27 @@ namespace Emissary
             }
             else
             {
-                //purposefully not setting AnimationState to Idle here
+                aState = AnimationState.Idle;
                 direction.Y = 0;
             }
+
+            //setting x direction based on input
+            if (kbState.IsKeyDown(Keys.A))
+            {
+                direction.X = -1;
+                aState = AnimationState.WalkingLeft;
+            }
+            else if (kbState.IsKeyDown(Keys.D))
+            {
+                direction.X = 1;
+                aState = AnimationState.WalkingRight;
+            }
+            else
+            {
+                //purposefully not setting AnimationState to Idle here
+                direction.X = 0;
+            }
+
 
             //calculating the new position
             position += direction * velocity;
@@ -107,30 +108,87 @@ namespace Emissary
         /// <param name="time">Game time passed for animations</param>
         public override void Draw(GameTime time)
         {
+            int speed = 10;
+
+            //getting the time modded by an arbitrary number for speed of the animation
+            int frameX = time.TotalGameTime.Milliseconds % speed;
+            
             Globals.SB.Begin();
 
-            //counts from the start of the game to current frame in seconds
-            //Debug.Print(time.TotalGameTime.Seconds.ToString());
+            //everytime the time passed is divisible by the speed move the frame true bit over 1 index
+            if (frameX == 0)
+            {
+                //moving the true bit over
+                animationFrames <<= 1;
+
+                //if the 1 gets moved over far enough the byte will just equal zero
+                if (animationFrames == 0)
+                {
+                    //in which case reset the byte to 1
+                    animationFrames = 1;
+                }
+            }
+
+            //retrieve the index (basically the frame) at which the 1 currently is in the byte
+            //  then multiply by 90 sizing the in the source rectangle
+            frameX = Globals.IndexAtTrue(animationFrames) * 90;
 
             //if the player is walking left
             if (aState == AnimationState.WalkingLeft)
             {
+                Globals.SB.Draw(
+                    asset,
+                    position,
+                    new Rectangle(frameX, 270, 90, 90),
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    new Vector2(.5f, .5f),
+                    SpriteEffects.None,
+                    0f);
 
             }
             //if the player is walking right
             else if (aState == AnimationState.WalkingRight)
             {
-
+                Globals.SB.Draw(
+                    asset,
+                    position,
+                    new Rectangle(frameX, 180, 90, 90),
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    new Vector2(.5f, .5f),
+                    SpriteEffects.None,
+                    0f);
             }
             //if the player is walking up
             else if (aState == AnimationState.WalkingUp)
             {
-
+                Globals.SB.Draw(
+                    asset,
+                    position,
+                    new Rectangle(frameX, 90, 90, 90),
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    new Vector2(.5f, .5f),
+                    SpriteEffects.None,
+                    0f);
             }
             //if the player is walking down
             else if (aState == AnimationState.WalkingDown)
             {
-
+                Globals.SB.Draw(
+                    asset,
+                    position,
+                    new Rectangle(frameX, 0, 90, 90),
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    new Vector2(.5f, .5f),
+                    SpriteEffects.None,
+                    0f);
             }
             //if the player is Idle
             else if (aState == AnimationState.Idle)
@@ -149,7 +207,5 @@ namespace Emissary
 
             Globals.SB.End();
         }
-
-
     }
 }

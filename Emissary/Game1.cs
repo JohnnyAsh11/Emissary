@@ -10,7 +10,13 @@ namespace Emissary
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Player player_Test;
+
+        //--------------------------------------------------
+        //class testing
+        private Player player;
+        private Inventory inventory;
+        private ItemManager itemManager;
+        //--------------------------------------------------
 
         public Game1()
         {
@@ -32,6 +38,17 @@ namespace Emissary
         protected override void LoadContent()
         {
             Globals.SB = new SpriteBatch(GraphicsDevice);
+            Globals.SF = Content.Load<SpriteFont>("Arial40");
+
+            Dictionary<int, Rectangle> hotbarLocations = new Dictionary<int, Rectangle>();
+            int xPos = 18;
+            for (int i = 0; i < 10; i++)
+            {
+                hotbarLocations[i + 1] = new Rectangle(xPos, 18, 45, 45);
+
+                xPos += 47;
+            }
+            Globals.HotbarLocations = hotbarLocations;
 
             Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
             //------------------------------------------------------
@@ -39,10 +56,24 @@ namespace Emissary
             textures["DebugImage"] = Content.Load<Texture2D>("DebugImage");
 
             textures["Player"] = Content.Load<Texture2D>("CharacterSpritesheet");
+            textures["Inventory"] = Content.Load<Texture2D>("Inventory_style_02a");
+            textures["InventoryCursor"] = Content.Load<Texture2D>("Inventory_select");
+            textures["InventoryBar"] = Content.Load<Texture2D>("Inventory_Bar");
             //------------------------------------------------------
             Globals.GameTextures = textures;
 
-            //player_Test = new Player();
+
+            //--------------------------------------------------
+            //class testing
+            player = new Player();
+            inventory = new Inventory();
+            itemManager = new ItemManager();
+
+            //event subscribing
+            itemManager.GetInventorySlots += inventory.GiveInventorySlots;
+
+            itemManager.TestMethod();
+            //--------------------------------------------------
         }
 
         protected override void Update(GameTime gameTime)
@@ -50,18 +81,32 @@ namespace Emissary
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //player_Test.Update();
+            //--------------------------------------------------
+            //class testing
+            player.Update();
+            inventory.Update();
+            itemManager.Update();
+            //--------------------------------------------------
 
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime time)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //player_Test.Draw(gameTime);
+            //--------------------------------------------------
+            //class testing
+            player.Draw(time);
+            inventory.Draw();
 
-            base.Draw(gameTime);
+            if (inventory.IsOpen)
+            {
+                itemManager.Draw();
+            }
+            //--------------------------------------------------
+
+            base.Draw(time);
         }
     }
 }
