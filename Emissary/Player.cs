@@ -47,6 +47,9 @@ namespace Emissary
         public event GetCollidableTiles GetCurrentCollidableTiles;
         private bool isColliding;
 
+        private FloatRectangle hitbox;
+
+
         //Properties: - NONE -
 
         //Constructors:
@@ -60,6 +63,8 @@ namespace Emissary
             direction = Vector2.Zero;
             aState = AnimationState.Idle;
             animationFrames = 1;
+
+            hitbox = new FloatRectangle(position, new Vector2(45, 45));
         }
 
         //Methods:
@@ -111,13 +116,14 @@ namespace Emissary
 
                 foreach (Rectangle tile in tiles)
                 {
-                    //enter collision system here
-                    
                 }
             }
 
             //calculating the new position
             position += direction * velocity;
+
+            //Updating the FloatRectangle's position
+            hitbox += direction * velocity;
         }
 
         /// <summary>
@@ -133,11 +139,11 @@ namespace Emissary
             
             Globals.SB.Begin();
 
-            Globals.SB.DrawString(
-                Globals.SF,
-                $"{isColliding}",
-                new Vector2(800, 50),
-                Color.White);
+            //Printing the player's hitbox
+            Globals.SB.Draw(
+                Globals.GameTextures["DebugImage"],
+                new Rectangle((int)hitbox.X, (int)hitbox.Y, (int)hitbox.Width, (int)hitbox.Height),
+                Color.Orange);
 
             //everytime the time passed is divisible by the speed move the frame true bit over 1 index
             if (frameX == 0)

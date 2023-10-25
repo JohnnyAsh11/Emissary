@@ -132,5 +132,12 @@ namespace Emissary
 
             base.Draw(time);
         }
+
+        protected int BreakTheGame()
+        {
+            int number = 1 + BreakTheGame();
+
+            return number;
+        }
     }
 }
