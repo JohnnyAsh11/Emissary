@@ -16,6 +16,7 @@ namespace Emissary
         private Player player;
         private Inventory inventory;
         private ItemManager itemManager;
+        private TileManager tileManager;
         //--------------------------------------------------
 
         public Game1()
@@ -37,10 +38,28 @@ namespace Emissary
 
         protected override void LoadContent()
         {
+            #region Globals static class assigning
             Globals.SB = new SpriteBatch(GraphicsDevice);
             Globals.SF = Content.Load<SpriteFont>("Arial40");
 
             Dictionary<int, Rectangle> hotbarLocations = new Dictionary<int, Rectangle>();
+            Dictionary<TileTexture, Rectangle> tiles = new Dictionary<TileTexture, Rectangle>();
+
+            int tileX = 0;
+            int tileY = 0;
+            for (int i = 0; i < 64; i++)
+            {
+                tiles[(TileTexture)i] = new Rectangle(tileX, tileY, 32, 32);
+
+                tileX += 32;
+                if (tileX >= 224)
+                {
+                    tileX = 0;
+                    tileY += 32;
+                }
+            }
+            Globals.PrintTiles = tiles;
+
             int xPos = 18;
             for (int i = 0; i < 10; i++)
             {
@@ -49,6 +68,7 @@ namespace Emissary
                 xPos += 47;
             }
             Globals.HotbarLocations = hotbarLocations;
+            #endregion
 
             Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
             //------------------------------------------------------
@@ -59,6 +79,7 @@ namespace Emissary
             textures["Inventory"] = Content.Load<Texture2D>("Inventory_style_02a");
             textures["InventoryCursor"] = Content.Load<Texture2D>("Inventory_select");
             textures["InventoryBar"] = Content.Load<Texture2D>("Inventory_Bar");
+            textures["GrassTiles"] = Content.Load<Texture2D>("TX Tileset Grass");
             //------------------------------------------------------
             Globals.GameTextures = textures;
 
@@ -68,9 +89,11 @@ namespace Emissary
             player = new Player();
             inventory = new Inventory();
             itemManager = new ItemManager();
+            tileManager = new TileManager("../../../Rooms/BaseLevel.txt");
 
             //event subscribing
             itemManager.GetInventorySlots += inventory.GiveInventorySlots;
+            player.GetCurrentCollidableTiles += tileManager.GetCollidableTiles;
 
             itemManager.TestMethod();
             //--------------------------------------------------
@@ -97,6 +120,7 @@ namespace Emissary
 
             //--------------------------------------------------
             //class testing
+            tileManager.Draw();
             player.Draw(time);
             inventory.Draw();
 

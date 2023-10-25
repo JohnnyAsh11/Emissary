@@ -22,6 +22,7 @@ namespace Emissary
 
         public static Dictionary<string, Texture2D> GameTextures { get; set; }
         public static Dictionary<int, Rectangle> HotbarLocations { get; set; }
+        public static Dictionary<TileTexture, Rectangle> PrintTiles { get; set; }
 
         //Methods:
         #region Bitpacking methods

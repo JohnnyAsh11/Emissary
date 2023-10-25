@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ namespace Emissary
         Idle
     }
 
+    public delegate List<Rectangle> GetCollidableTiles();
+
     /// <summary>
     /// Player object class:
     /// controls roughly everything regarding the playable character
@@ -40,7 +43,11 @@ namespace Emissary
         private AnimationState aState;
         private byte animationFrames;
 
-        //Properties:
+        //collision fields
+        public event GetCollidableTiles GetCurrentCollidableTiles;
+        private bool isColliding;
+
+        //Properties: - NONE -
 
         //Constructors:
         /// <summary>
@@ -97,6 +104,17 @@ namespace Emissary
                 direction.X = 0;
             }
 
+            //Collision system
+            if (GetCurrentCollidableTiles != null)
+            {
+                List<Rectangle> tiles = GetCurrentCollidableTiles();
+
+                foreach (Rectangle tile in tiles)
+                {
+                    //enter collision system here
+                    
+                }
+            }
 
             //calculating the new position
             position += direction * velocity;
@@ -114,6 +132,12 @@ namespace Emissary
             int frameX = time.TotalGameTime.Milliseconds % speed;
             
             Globals.SB.Begin();
+
+            Globals.SB.DrawString(
+                Globals.SF,
+                $"{isColliding}",
+                new Vector2(800, 50),
+                Color.White);
 
             //everytime the time passed is divisible by the speed move the frame true bit over 1 index
             if (frameX == 0)
