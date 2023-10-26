@@ -44,11 +44,6 @@ namespace Emissary
             set { y = value; }
         }
 
-        public float Top{ get { return (x + width / 2); } }
-        public float Bottom{ get { return (x + width / 2) + height; } }
-        public float Right{ get { return (x - height / 2) + width; } }
-        public float Left{ get { return (x - height / 2); } }
-
         public float TopRight { get { return x + width; } }
         public float BottomRight { get { return (x + width) + height; } }
         public float BottomLeft { get { return x + height; } }

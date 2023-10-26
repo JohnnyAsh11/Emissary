@@ -114,8 +114,17 @@ namespace Emissary
             {
                 List<Rectangle> tiles = GetCurrentCollidableTiles();
 
+
                 foreach (Rectangle tile in tiles)
                 {
+                    //Simple AABB Collision system
+                    if (tile.X < (hitbox.X + hitbox.Width) &&
+                        (tile.X + tile.Width) > hitbox.X &&
+                        tile.Y < (hitbox.Y + hitbox.Height) &&
+                        (tile.Y + tile.Height) > hitbox.Y)
+                    {
+                        isColliding = true;
+                    }
                 }
             }
 
@@ -139,7 +148,13 @@ namespace Emissary
             
             Globals.SB.Begin();
 
-            //Printing the player's hitbox
+            Globals.SB.DrawString(
+                Globals.SF,
+                $"{isColliding}",
+                new Vector2(800, 100),
+                Color.White);
+
+            //Rendering the player's hitbox
             Globals.SB.Draw(
                 Globals.GameTextures["DebugImage"],
                 new Rectangle((int)hitbox.X, (int)hitbox.Y, (int)hitbox.Width, (int)hitbox.Height),
