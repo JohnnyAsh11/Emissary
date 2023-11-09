@@ -38,7 +38,7 @@ namespace Emissary
 
         protected override void LoadContent()
         {
-            #region Globals static class assigning
+            #region Assigning values to Globals class fields
             Globals.SB = new SpriteBatch(GraphicsDevice);
             Globals.SF = Content.Load<SpriteFont>("Arial40");
 

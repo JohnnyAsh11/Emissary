@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 namespace Emissary
 {
@@ -34,33 +35,37 @@ namespace Emissary
             }
         }
 
+        //getter/setter for the Height of the rectangle
         public float Height
         {
             get { return height; }
             set { height = value; }
         }
 
+        //getter/setter for the Width of the rectangle
         public float Width
         {
             get { return width; }
             set { width = value; }
         }
 
+        //getter/setter for the X position of the rectangle
         public float X
         {
             get { return x; }
             set { x = value; }
         }
 
+        //getter/setter for the Y position of the rectangle
         public float Y
         {
             get { return y; }
             set { y = value; }
         }
 
-        public float TopRight { get { return x + width; } }
-        public float BottomRight { get { return (x + width) + height; } }
-        public float BottomLeft { get { return x + height; } }
+        //Top right and bottom left bounds of the rectangle used for collisions
+        private float TopRight { get { return x + width; } }
+        private float BottomLeft { get { return x + height; } }
 
         //Constructors:
         /// <summary>
