@@ -20,6 +20,16 @@ namespace Emissary
         private float height;
 
         //Properties:
+        public Vector2 Position
+        {
+            get { return new Vector2(x, y); }
+            set 
+            { 
+                x = value.X;
+                y = value.Y;
+            }
+        }
+
         public float Height
         {
             get { return height; }
@@ -119,6 +129,24 @@ namespace Emissary
             float newY = rect.y + changeInPosition.Y;
 
             return new FloatRectangle(newX, newY, rect.Width, rect.Height);
+        }
+
+        /// <summary>
+        /// Performs an AABB collision check against a MonoGame Rectangle
+        /// </summary>
+        /// <param name="rect">Rectangle being checked against</param>
+        /// <returns>whether or not a collision has occured</returns>
+        public bool AABBCheck(Rectangle rect)
+        {
+            //Determining whether a collision has occurred
+            if (rect.X < (this.x + this.width) &&
+                (rect.X + rect.Width) > this.x &&
+                rect.Y < (this.y + this.height) &&
+                (rect.Y + rect.Height) > this.y)
+            {
+                return true;
+            }
+            return false;
         }
 
     }

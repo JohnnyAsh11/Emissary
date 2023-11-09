@@ -110,7 +110,7 @@ namespace Emissary
         /// <returns>the index of the single true value</returns>
         public static int IndexAtTrue(byte data)
         {
-            int index = 0;
+            int index = 7;
 
             for (byte i = 1 << 7; i > 0; i >>= 1)
             {
@@ -119,12 +119,13 @@ namespace Emissary
                     return index;
                 }
 
-                index++;
+                index--;
             }
 
             //default fail value
             return -1;
         }
         #endregion
+
     }
 }

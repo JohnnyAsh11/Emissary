@@ -16,26 +16,26 @@ namespace Emissary
     {
 
         //fields:
-        protected Vector2 position;
+        protected FloatRectangle hitbox;
         protected Texture2D asset;
 
         //Properties:
         //get/set property for the object's position
         public Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return hitbox.Position; }
+            set { hitbox.Position = value; }
         }
 
         public float X
         {
-            get { return position.X; }
-            set { position.X = value; }
+            get { return hitbox.X; }
+            set { hitbox.X = value; }
         }
         public float Y
         {
-            get { return position.Y; }
-            set { position.Y = value; }
+            get { return hitbox.Y; }
+            set { hitbox.Y = value; }
         }
 
         //Constructors:
@@ -44,9 +44,9 @@ namespace Emissary
         /// </summary>
         /// <param name="position">Rectanglular position of the GameObject</param>
         /// <param name="asset">Rendered texture for the GameObject</param>
-        public GameObject(Vector2 position, Texture2D asset)
+        public GameObject(FloatRectangle position, Texture2D asset)
         {
-            this.position = position;
+            this.hitbox = position;
             this.asset = asset;
         }
 
@@ -64,7 +64,7 @@ namespace Emissary
             Globals.SB.Begin();
             Globals.SB.Draw(
                 asset,
-                position,
+                hitbox.Position,
                 Color.White);
             Globals.SB.End();
         }

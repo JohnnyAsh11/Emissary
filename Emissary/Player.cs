@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -46,9 +47,7 @@ namespace Emissary
         //collision fields
         public event GetCollidableTiles GetCurrentCollidableTiles;
         private bool isColliding;
-
-        private FloatRectangle hitbox;
-
+        private byte collisions;
 
         //Properties: - NONE -
 
@@ -57,14 +56,14 @@ namespace Emissary
         /// Default constructor for the Player class
         /// </summary>
         public Player()
-            : base(new Vector2(100, 100), Globals.GameTextures["Player"])
+            : base(new FloatRectangle(100, 100, 45, 45), Globals.GameTextures["Player"])
         {
             velocity = new Vector2(5, 5);
             direction = Vector2.Zero;
             aState = AnimationState.Idle;
             animationFrames = 1;
 
-            hitbox = new FloatRectangle(position, new Vector2(45, 45));
+            collisions = 0;
         }
 
         //Methods:
@@ -74,6 +73,7 @@ namespace Emissary
         public override void Update()
         {
             kbState = Keyboard.GetState();
+            FloatRectangle nextHitbox = hitbox;
 
             //setting y direction based on input
             if (kbState.IsKeyDown(Keys.W))
@@ -109,30 +109,43 @@ namespace Emissary
                 direction.X = 0;
             }
 
+            //calculating the next position
+            nextHitbox += direction * velocity;
+
             //Collision system
             if (GetCurrentCollidableTiles != null)
             {
+                //getting the new collidable tiles
                 List<Rectangle> tiles = GetCurrentCollidableTiles();
-
 
                 foreach (Rectangle tile in tiles)
                 {
-                    //Simple AABB Collision system
-                    if (tile.X < (hitbox.X + hitbox.Width) &&
-                        (tile.X + tile.Width) > hitbox.X &&
-                        tile.Y < (hitbox.Y + hitbox.Height) &&
-                        (tile.Y + tile.Height) > hitbox.Y)
+                    //Simple AABB Collision check
+                    if (nextHitbox.AABBCheck(tile))
                     {
-                        isColliding = true;
+                        //left and right collisions
+                        if ((nextHitbox.X + nextHitbox.Width) >= tile.X && direction.X == 1 ||      //Moving Right
+                            nextHitbox.X <= (tile.X + tile.Width) && direction.X == -1)             //Moving Left
+                        {
+                            //subtract the movement that would be added the player's
+                            // real hitbox rectangle -> X axis
+                            nextHitbox.X -= direction.X * velocity.X;
+                        }
+
+                        //Top and Bottom collisions
+                        if ((nextHitbox.Y + nextHitbox.Height) >= tile.Y && direction.Y == 1 ||     //Moving Down
+                            nextHitbox.Y <= (tile.Y + tile.Height) && direction.Y == -1)            //Moving Up
+                        {
+                            //subtract the movement that would be added the player's
+                            // real hitbox rectangle -> Y axis
+                            nextHitbox.Y -= direction.Y * velocity.Y;
+                        }
                     }
                 }
             }
 
-            //calculating the new position
-            position += direction * velocity;
-
-            //Updating the FloatRectangle's position
-            hitbox += direction * velocity;
+            //calculating the position
+            hitbox = nextHitbox;
         }
 
         /// <summary>
@@ -183,7 +196,7 @@ namespace Emissary
             {
                 Globals.SB.Draw(
                     asset,
-                    position,
+                    hitbox.Position,
                     new Rectangle(frameX, 270, 90, 90),
                     Color.White,
                     0f,
@@ -198,7 +211,7 @@ namespace Emissary
             {
                 Globals.SB.Draw(
                     asset,
-                    position,
+                    hitbox.Position,
                     new Rectangle(frameX, 180, 90, 90),
                     Color.White,
                     0f,
@@ -212,7 +225,7 @@ namespace Emissary
             {
                 Globals.SB.Draw(
                     asset,
-                    position,
+                    hitbox.Position,
                     new Rectangle(frameX, 90, 90, 90),
                     Color.White,
                     0f,
@@ -226,7 +239,7 @@ namespace Emissary
             {
                 Globals.SB.Draw(
                     asset,
-                    position,
+                    hitbox.Position,
                     new Rectangle(frameX, 0, 90, 90),
                     Color.White,
                     0f,
@@ -240,7 +253,7 @@ namespace Emissary
             {
                 Globals.SB.Draw(
                     asset,                          //Texture
-                    position,                       //position
+                    hitbox.Position,                //position
                     new Rectangle(0, 0, 90, 90),    //Source Rectangle
                     Color.White,                    //Color Mask
                     0f,                             //Rotation
