@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace Emissary
 {
+    /// <summary>
+    /// Custom Rectangle struct using only Float values in order to better perform vector based
+    /// calculations for GameObject positions
+    /// </summary>
     public struct FloatRectangle
     {
 

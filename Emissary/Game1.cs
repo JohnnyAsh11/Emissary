@@ -67,7 +67,7 @@ namespace Emissary
 
                 xPos += 47;
             }
-            Globals.HotbarLocations = hotbarLocations;
+            Globals.HotbarPositions = hotbarLocations;
             #endregion
 
             Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
@@ -131,13 +131,6 @@ namespace Emissary
             //--------------------------------------------------
 
             base.Draw(time);
-        }
-
-        protected int BreakTheGame()
-        {
-            int number = 1 + BreakTheGame();
-
-            return number;
         }
     }
 }

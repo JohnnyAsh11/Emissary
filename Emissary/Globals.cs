@@ -15,14 +15,47 @@ namespace Emissary
     /// </summary>
     public static class Globals
     {
+        //Fields:
+        private static SpriteBatch spriteBatch;
+        private static SpriteFont debugFont;
+        private static Dictionary<TileTexture, Rectangle> tileSources;
+        private static Dictionary<string, Texture2D> gameTextures;
+        private static Dictionary<int, Rectangle> hotbarPositions;
+
         //Properties:
+        //getter/setter for the Sprite render class in MonoGame
+        public static SpriteBatch SB
+        {
+            get { return spriteBatch; }
+            set { spriteBatch = value; }
+        }
+        //Getter/Setter for the Sprite Font that I use for debugging
+        public static SpriteFont SF
+        {
+            get { return debugFont; }
+            set { debugFont = value; }
+        }
 
-        public static SpriteBatch SB { get; set; }
-        public static SpriteFont SF { get; set; }
+        //Getter/Setter for the Dictionary that holds all sprites for the game
+        public static Dictionary<string, Texture2D> GameTextures
+        {
+            get { return gameTextures; }
+            set { gameTextures = value; }
+        }
 
-        public static Dictionary<string, Texture2D> GameTextures { get; set; }
-        public static Dictionary<int, Rectangle> HotbarLocations { get; set; }
-        public static Dictionary<TileTexture, Rectangle> PrintTiles { get; set; }
+        //Getter/Setter for the Dictionary that holds the rectangle locations of the Hotbar
+        public static Dictionary<int, Rectangle> HotbarPositions
+        {
+            get { return hotbarPositions; }
+            set { hotbarPositions = value; }
+        }
+
+        //getter/setter for the Tileset source rectangles as they match their respective enumeration
+        public static Dictionary<TileTexture, Rectangle> PrintTiles
+        {
+            get { return tileSources; }
+            set { tileSources = value; }
+        }
 
         //Methods:
         #region Bitpacking methods

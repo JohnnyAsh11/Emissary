@@ -209,7 +209,7 @@ namespace Emissary
                 if (inventorySlots[4][i].StoredItem != null)
                 {
                     inventorySlots[4][i].StoredItem.Draw(
-                        Globals.HotbarLocations[i + 1]);
+                        Globals.HotbarPositions[i + 1]);
                 }
             }
 
