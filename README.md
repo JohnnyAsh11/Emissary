@@ -11,3 +11,6 @@
    - I want to add some enemies that have their own wanderering AI and seek AI
    - Fully fleshing out the inventory system
    - Making the items have an effect/do something in game
+- Itch.io artist credits:
+  - Caino
+  - ELV Games
