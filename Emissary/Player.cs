@@ -41,13 +41,12 @@ namespace Emissary
         private KeyboardState kbState;
 
         //Animation fields
-        private AnimationState aState;
+        private AnimationState animationState;
         private byte animationFrames;
 
         //collision fields
         public event GetCollidableTiles GetCurrentCollidableTiles;
         private bool isColliding;
-        private byte collisions;
 
         //Properties: - NONE -
 
@@ -60,10 +59,8 @@ namespace Emissary
         {
             velocity = new Vector2(5, 5);
             direction = Vector2.Zero;
-            aState = AnimationState.Idle;
+            animationState = AnimationState.Idle;
             animationFrames = 1;
-
-            collisions = 0;
         }
 
         //Methods:
@@ -79,16 +76,16 @@ namespace Emissary
             if (kbState.IsKeyDown(Keys.W))
             {
                 direction.Y = -1;
-                aState = AnimationState.WalkingUp;
+                animationState = AnimationState.WalkingUp;
             }
             else if (kbState.IsKeyDown(Keys.S))
             {
                 direction.Y = 1;
-                aState = AnimationState.WalkingDown;
+                animationState = AnimationState.WalkingDown;
             }
             else
             {
-                aState = AnimationState.Idle;
+                animationState = AnimationState.Idle;
                 direction.Y = 0;
             }
 
@@ -96,12 +93,12 @@ namespace Emissary
             if (kbState.IsKeyDown(Keys.A))
             {
                 direction.X = -1;
-                aState = AnimationState.WalkingLeft;
+                animationState = AnimationState.WalkingLeft;
             }
             else if (kbState.IsKeyDown(Keys.D))
             {
                 direction.X = 1;
-                aState = AnimationState.WalkingRight;
+                animationState = AnimationState.WalkingRight;
             }
             else
             {
@@ -192,7 +189,7 @@ namespace Emissary
             frameX = Globals.IndexAtTrue(animationFrames) * 90;
 
             //if the player is walking left
-            if (aState == AnimationState.WalkingLeft)
+            if (animationState == AnimationState.WalkingLeft)
             {
                 Globals.SB.Draw(
                     asset,
@@ -207,7 +204,7 @@ namespace Emissary
 
             }
             //if the player is walking right
-            else if (aState == AnimationState.WalkingRight)
+            else if (animationState == AnimationState.WalkingRight)
             {
                 Globals.SB.Draw(
                     asset,
@@ -221,7 +218,7 @@ namespace Emissary
                     0f);
             }
             //if the player is walking up
-            else if (aState == AnimationState.WalkingUp)
+            else if (animationState == AnimationState.WalkingUp)
             {
                 Globals.SB.Draw(
                     asset,
@@ -235,7 +232,7 @@ namespace Emissary
                     0f);
             }
             //if the player is walking down
-            else if (aState == AnimationState.WalkingDown)
+            else if (animationState == AnimationState.WalkingDown)
             {
                 Globals.SB.Draw(
                     asset,
@@ -249,7 +246,7 @@ namespace Emissary
                     0f);
             }
             //if the player is Idle
-            else if (aState == AnimationState.Idle)
+            else if (animationState == AnimationState.Idle)
             {
                 Globals.SB.Draw(
                     asset,                          //Texture
