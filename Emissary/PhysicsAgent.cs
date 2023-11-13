@@ -26,7 +26,6 @@ namespace Emissary
         protected Vector2 velocity;
         protected Vector2 totalForce;
 
-        protected Vector2 wanderCircleCenter;
         protected Vector2 maxVelocity;
         protected Vector2 maxForce;
 
@@ -134,6 +133,12 @@ namespace Emissary
             return seekingForce;
         }
 
+        /// <summary>
+        /// Algorithm for AI PhysicsAgent wandering
+        /// </summary>
+        /// <param name="time">The time being used for future position calculations</param>
+        /// <param name="radius">Radius of the circle used for the Wander Algorithm</param>
+        /// <returns>The Seek force being applied to acceleration for wandering</returns>
         protected Vector2 Wander(float time, float radius)
         {
             //finding the location of the projected wander circle
@@ -151,10 +156,10 @@ namespace Emissary
         }
 
         /// <summary>
-        /// 
+        /// Calculated the future position based on the current velocity and a number of iterations
         /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
+        /// <param name="time">Amount of time passed</param>
+        /// <returns>The future position of the PhysicsAgent</returns>
         protected Vector2 CalcFuturePosition(float time)
         {
             Vector2 futurePosition;
