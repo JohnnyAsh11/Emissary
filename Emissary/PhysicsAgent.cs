@@ -19,6 +19,7 @@ namespace Emissary
 
         //Fields:
         protected float maxSpeed;
+        protected Random rng;
 
         protected float mass;
         protected Vector2 acceleration;
@@ -44,6 +45,7 @@ namespace Emissary
             maxSpeed = 5f;
             velocity = Vector2.Zero;
             acceleration = Vector2.Zero;
+            rng = new Random();
 
             maxVelocity = new Vector2(10, 10);
             maxForce = new Vector2(5, 5);
@@ -66,6 +68,7 @@ namespace Emissary
             maxSpeed = 5f;
             velocity = Vector2.Zero;
             acceleration = Vector2.Zero;
+            rng = new Random();
 
             this.maxVelocity = maxVelocity;
             this.maxForce = maxForce;
@@ -131,6 +134,38 @@ namespace Emissary
             return seekingForce;
         }
 
+        protected Vector2 Wander(float time, float radius)
+        {
+            //finding the location of the projected wander circle
+            Vector2 futurePosition = CalcFuturePosition(time);
+
+            //getting a random point on the circle
+            float randAngle = (float)(rng.NextDouble() * (Math.PI * 2));
+
+            //calculating the x and y position of the point on the circle
+            float x = futurePosition.X + (float)(Math.Cos(randAngle)) * radius;
+            float y = futurePosition.Y + (float)(Math.Sin(randAngle)) * radius;
+
+            //seeking the point found
+            return Seek(new Vector2(x, y));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        protected Vector2 CalcFuturePosition(float time)
+        {
+            Vector2 futurePosition;
+
+            //getting the future position by getting the current position and
+            // adding velecity to it multplied by time
+            futurePosition = hitbox.Position + (velocity * time);
+
+            return futurePosition;
+        }
+
         /// <summary>
         /// Draw method for all PhysicsAgents
         /// </summary>
@@ -169,7 +204,7 @@ namespace Emissary
         {
             //Newton's Law is Force = Mass * acceleration
             // so we can calculate acceleration by acceleration = force / mass 
-            totalForce += force / mass;
+            acceleration += force / mass;
         }
     }
 }
