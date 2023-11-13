@@ -25,6 +25,19 @@ namespace Emissary
         private float height;
 
         //Properties:
+        //gets the FloatRectangle as a MonoGame Rectangle
+        public Rectangle ToRectangle
+        {
+            get
+            {
+                return new Rectangle(
+                    (int)x,
+                    (int)y,
+                    (int)width,
+                    (int)height);
+            }
+        }
+
         public Vector2 Position
         {
             get { return new Vector2(x, y); }

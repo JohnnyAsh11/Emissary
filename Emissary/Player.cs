@@ -167,7 +167,7 @@ namespace Emissary
             //Rendering the player's hitbox
             Globals.SB.Draw(
                 Globals.GameTextures["DebugImage"],
-                new Rectangle((int)hitbox.X, (int)hitbox.Y, (int)hitbox.Width, (int)hitbox.Height),
+                hitbox.ToRectangle,
                 Color.Orange);
 
             //everytime the time passed is divisible by the speed move the frame true bit over 1 index
