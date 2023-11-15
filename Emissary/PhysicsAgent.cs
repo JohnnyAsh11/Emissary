@@ -236,18 +236,25 @@ namespace Emissary
             acceleration += force / mass;
         }
 
+        /// <summary>
+        /// Creates an 800x800 box that the PhysicsAgent will remain within
+        /// </summary>
+        /// <returns>A Vector2 force to keep the Agent within bounds</returns>
         protected Vector2 KeepInBounds()
         {
             Vector2 position = hitbox.Position;
 
+            //checks performed to tell whether the PhysicsAgent is out of bounds
             if (position.Y >= startingPosition.Y + 400 ||
                 position.Y <= startingPosition.Y - 400 ||
                 position.X >= startingPosition.X + 400 ||
                 position.X <= startingPosition.X - 400)
             {
+                //if it is then seek the Starting position of the PhysicsAgent
                 return Seek(startingPosition);
             }
 
+            //return Vector(0, 0) if the object is within bounds
             return Vector2.Zero;
         }
 
