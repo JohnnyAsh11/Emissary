@@ -17,6 +17,8 @@ namespace Emissary
         private Inventory inventory;
         private ItemManager itemManager;
         private TileManager tileManager;
+
+        private Enemy enemyTest;
         //--------------------------------------------------
 
         public Game1()
@@ -91,6 +93,11 @@ namespace Emissary
             itemManager = new ItemManager();
             tileManager = new TileManager("../../../Rooms/BaseLevel.txt");
 
+            enemyTest = new Enemy(
+                new FloatRectangle(800, 480, 50, 50),
+                Globals.GameTextures["DebugImage"],
+                10);
+
             //event subscribing
             itemManager.GetInventorySlots += inventory.GiveInventorySlots;
             player.GetCurrentCollidableTiles += tileManager.GetCollidableTiles;
@@ -101,6 +108,8 @@ namespace Emissary
 
         protected override void Update(GameTime gameTime)
         {
+            //updating the GameTime reference in Globals
+            Globals.Time = gameTime;
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -109,6 +118,8 @@ namespace Emissary
             player.Update();
             inventory.Update();
             itemManager.Update();
+
+            enemyTest.Update();
             //--------------------------------------------------
 
             base.Update(gameTime);
@@ -121,13 +132,15 @@ namespace Emissary
             //--------------------------------------------------
             //class testing
             tileManager.Draw();
-            player.Draw(time);
+            player.Draw();
             inventory.Draw();
 
             if (inventory.IsOpen)
             {
                 itemManager.Draw();
             }
+
+            enemyTest.Draw();
             //--------------------------------------------------
 
             base.Draw(time);

@@ -148,13 +148,12 @@ namespace Emissary
         /// <summary>
         /// Draw method for the Player class
         /// </summary>
-        /// <param name="time">Game time passed for animations</param>
-        public override void Draw(GameTime time)
+        public override void Draw()
         {
             int speed = 10;
 
             //getting the time modded by an arbitrary number for speed of the animation
-            int frameX = time.TotalGameTime.Milliseconds % speed;
+            int frameX = Globals.Time.TotalGameTime.Milliseconds % speed;
             
             Globals.SB.Begin();
 

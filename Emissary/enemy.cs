@@ -17,7 +17,7 @@ namespace Emissary
     {
 
         //Fields:
-        public event GetPosition GetPlayerPosition;
+        public event GetPosition GetTargetPosition;
 
         //Properties: - NONE -
 
@@ -40,16 +40,26 @@ namespace Emissary
         /// </summary>
         protected override void CalcSteeringForces()
         {
-            
+            if (GetTargetPosition != null)
+            {
+                Vector2 target;
+            }
+
+            totalForce += Wander(1, 1) * 5;
+            totalForce += KeepInBounds();
         }
 
         /// <summary>
         /// Enemy class draw method 
         /// </summary>
-        /// <param name="time">Time reference for animations</param>
-        protected override void DrawAgent(GameTime time)
+        protected override void DrawAgent()
         {
-
+            Globals.SB.Begin();
+            Globals.SB.Draw(
+                asset,
+                hitbox.ToRectangle,
+                Color.Aqua);
+            Globals.SB.End();
         }
 
     }

@@ -18,11 +18,19 @@ namespace Emissary
         //Fields:
         private static SpriteBatch spriteBatch;
         private static SpriteFont debugFont;
+        private static GameTime time;
         private static Dictionary<TileTexture, Rectangle> tileSources;
         private static Dictionary<string, Texture2D> gameTextures;
         private static Dictionary<int, Rectangle> hotbarPositions;
 
         //Properties:
+        //Reference to the time object
+        public static GameTime Time
+        {
+            get { return time; }
+            set { time = value; }
+        }
+
         //getter/setter for the Sprite render class in MonoGame
         public static SpriteBatch SB
         {

@@ -59,7 +59,7 @@ namespace Emissary
         /// <summary>
         /// Generic draw method for all GameObjects
         /// </summary>
-        public virtual void Draw(GameTime time)
+        public virtual void Draw()
         {
             Globals.SB.Begin();
             Globals.SB.Draw(

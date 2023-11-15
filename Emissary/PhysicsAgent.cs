@@ -29,6 +29,10 @@ namespace Emissary
         protected Vector2 maxVelocity;
         protected Vector2 maxForce;
 
+        private int timer;
+        private float wanderAngle;
+        private Vector2 startingPosition;
+
         //Properties: - NONE -
 
         //Constructors:
@@ -45,6 +49,7 @@ namespace Emissary
             velocity = Vector2.Zero;
             acceleration = Vector2.Zero;
             rng = new Random();
+            startingPosition = hitbox.Position;
 
             maxVelocity = new Vector2(10, 10);
             maxForce = new Vector2(5, 5);
@@ -68,6 +73,7 @@ namespace Emissary
             velocity = Vector2.Zero;
             acceleration = Vector2.Zero;
             rng = new Random();
+            startingPosition = hitbox.Position;
 
             this.maxVelocity = maxVelocity;
             this.maxForce = maxForce;
@@ -90,20 +96,11 @@ namespace Emissary
             //  would be using
             this.CalcSteeringForces();
 
-            //Clamping the magnitude of the vector the prevent crazy high numbers
-            totalForce = Vector2.Clamp(
-                                totalForce,         // The Vector having its magnitude clamped
-                                Vector2.Zero,       // The minimum force
-                                maxForce);          // The maximum force
+            //applying the calculated steering force
+            this.ApplyForce(totalForce);
 
             //applying the acceleration to the velocity
             velocity += acceleration;
-
-            //clamping velocity to again prevent crazy numbers
-            velocity = Vector2.Clamp(
-                                velocity, 
-                                Vector2.Zero, 
-                                maxVelocity);
 
             //applying the velocity to the position
             hitbox.Position += velocity;
@@ -144,12 +141,19 @@ namespace Emissary
             //finding the location of the projected wander circle
             Vector2 futurePosition = CalcFuturePosition(time);
 
+            timer--; ;
+            if (timer <= 0)
+            {
+                wanderAngle = (float)(rng.NextDouble() * (Math.PI * 2));
+                timer = 30;
+            }
+
             //getting a random point on the circle
-            float randAngle = (float)(rng.NextDouble() * (Math.PI * 2));
+            //float randAngle = (float)(rng.NextDouble() * (Math.PI * 2));
 
             //calculating the x and y position of the point on the circle
-            float x = futurePosition.X + (float)(Math.Cos(randAngle)) * radius;
-            float y = futurePosition.Y + (float)(Math.Sin(randAngle)) * radius;
+            float x = futurePosition.X + (float)(Math.Cos(wanderAngle)) * radius;
+            float y = futurePosition.Y + (float)(Math.Sin(wanderAngle)) * radius;
 
             //seeking the point found
             return Seek(new Vector2(x, y));
@@ -174,17 +178,37 @@ namespace Emissary
         /// <summary>
         /// Draw method for all PhysicsAgents
         /// </summary>
-        /// <param name="time">Time reference used for animations</param>
-        public override void Draw(GameTime time)
+        public override void Draw()
         {
-            DrawAgent(time);
+            //---------------------------------------------------------------------------
+            //                      Debug Rendering
+            Globals.SB.Begin();
+            Globals.SB.DrawString(
+                Globals.SF,
+                $"{wanderAngle}",
+                new Vector2(800, 50),
+                Color.Blue);
+
+            Globals.SB.Draw(
+                Globals.GameTextures["DebugImage"],
+                new Vector2(hitbox.X + hitbox.Width / 2, hitbox.Y + hitbox.Height / 2),
+                new Rectangle(0, 0, 1000, 100),
+                Color.Crimson,
+                wanderAngle,
+                Vector2.Zero,
+                0.1f,
+                SpriteEffects.None,
+                0f);
+            Globals.SB.End();
+            //---------------------------------------------------------------------------
+
+            DrawAgent();
         }
 
         /// <summary>
         /// Base Method for drawing that PhysicsAgents can override
         /// </summary>
-        /// <param name="time">Time reference used for potential Animations</param>
-        protected virtual void DrawAgent(GameTime time)
+        protected virtual void DrawAgent()
         {
             Globals.SB.Begin();
             Globals.SB.Draw(
@@ -211,5 +235,21 @@ namespace Emissary
             // so we can calculate acceleration by acceleration = force / mass 
             acceleration += force / mass;
         }
+
+        protected Vector2 KeepInBounds()
+        {
+            Vector2 position = hitbox.Position;
+
+            if (position.Y >= startingPosition.Y + 400 ||
+                position.Y <= startingPosition.Y - 400 ||
+                position.X >= startingPosition.X + 400 ||
+                position.X <= startingPosition.X - 400)
+            {
+                return Seek(startingPosition);
+            }
+
+            return Vector2.Zero;
+        }
+
     }
 }
