@@ -118,7 +118,7 @@ namespace Emissary
                 foreach (Rectangle tile in tiles)
                 {
                     //Simple AABB Collision check
-                    if (nextHitbox.AABBCheck(tile))
+                    if (nextHitbox.Intersects(tile))
                     {
                         //left and right collisions
                         if ((nextHitbox.X + nextHitbox.Width) >= tile.X && direction.X == 1 ||      //Moving Right

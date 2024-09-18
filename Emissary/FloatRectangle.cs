@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace XXXXXX
+namespace Emissary
 {
     /// <summary>
     /// Custom Rectangle struct using only Float values in order to better perform vector based
@@ -197,7 +197,7 @@ namespace XXXXXX
         /// </summary>
         /// <param name="vect">Vectangle being checked against</param>
         /// <returns>whether or not a collision has occured</returns>
-        public bool Intersects(Vectangle vect)
+        public bool Intersects(FloatRectangle vect)
         {
             //Determining whether a collision has occurred
             return vect.X < (this.x + this.width) &&
@@ -220,7 +220,7 @@ namespace XXXXXX
             float newY = rect.y + changeInPosition.Y;
 
             //returning the new Vectangle with the new Position Vector
-            return new Vectangle(newX, newY, rect.Width, rect.Height);
+            return new FloatRectangle(newX, newY, rect.Width, rect.Height);
         }
 
         /// <summary>
