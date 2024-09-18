@@ -47,11 +47,15 @@ namespace Emissary
                 slots = GetInventorySlots();
             }
 
+            //-----------------------------------------------
+            //  SUBJECT TO REMOVAL IF Update() IS REMOVED
+            //
             //updating all Items in the game
             foreach (Item gameItem in gameItems)
             {
                 gameItem.Update();
             }
+            //-----------------------------------------------
 
             //for putting items back into slots after picking them up
             foreach (Item gameItem in gameItems)

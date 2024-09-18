@@ -157,18 +157,6 @@ namespace Emissary
             
             Globals.SB.Begin();
 
-            Globals.SB.DrawString(
-                Globals.SF,
-                $"{isColliding}",
-                new Vector2(800, 100),
-                Color.White);
-
-            //Rendering the player's hitbox
-            Globals.SB.Draw(
-                Globals.GameTextures["DebugImage"],
-                hitbox.ToRectangle,
-                Color.Orange);
-
             //everytime the time passed is divisible by the speed move the frame true bit over 1 index
             if (frameX == 0)
             {

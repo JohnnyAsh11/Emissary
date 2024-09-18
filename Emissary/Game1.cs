@@ -18,7 +18,7 @@ namespace Emissary
         private ItemManager itemManager;
         private TileManager tileManager;
 
-        private Enemy enemyTest;
+        private EnemyManager enemyTest;
         //--------------------------------------------------
 
         public Game1()
@@ -82,6 +82,7 @@ namespace Emissary
             textures["InventoryCursor"] = Content.Load<Texture2D>("Inventory_select");
             textures["InventoryBar"] = Content.Load<Texture2D>("Inventory_Bar");
             textures["GrassTiles"] = Content.Load<Texture2D>("TX Tileset Grass");
+            textures["GoblinWalk"] = Content.Load<Texture2D>("goblin_enemy_walk");
             //------------------------------------------------------
             Globals.GameTextures = textures;
 
@@ -93,10 +94,7 @@ namespace Emissary
             itemManager = new ItemManager();
             tileManager = new TileManager("../../../Rooms/BaseLevel.txt");
 
-            enemyTest = new Enemy(
-                new FloatRectangle(800, 480, 50, 50),
-                Globals.GameTextures["DebugImage"],
-                10);
+            enemyTest = new EnemyManager();
 
             //event subscribing
             itemManager.GetInventorySlots += inventory.GiveInventorySlots;
@@ -133,6 +131,7 @@ namespace Emissary
             //class testing
             tileManager.Draw();
             player.Draw();
+            enemyTest.Draw();
             inventory.Draw();
 
             if (inventory.IsOpen)
@@ -140,7 +139,6 @@ namespace Emissary
                 itemManager.Draw();
             }
 
-            enemyTest.Draw();
             //--------------------------------------------------
 
             base.Draw(time);

@@ -138,21 +138,6 @@ namespace Emissary
             return false;
         }
 
-        //Operator Overloads:
-        /// <summary>
-        /// Adds the X and Y values of a Vector2 to the X and Y coordinates of the FloatRectangle
-        /// </summary>
-        /// <param name="rect">Rectangle having its values changed</param>
-        /// <param name="changeInPosition">positional change</param>
-        /// <returns>A FloatRectangle with the positional updates</returns>
-        public static FloatRectangle operator +(FloatRectangle rect, Vector2 changeInPosition)
-        {
-            float newX = rect.x + changeInPosition.X;
-            float newY = rect.y + changeInPosition.Y;
-
-            return new FloatRectangle(newX, newY, rect.Width, rect.Height);
-        }
-
         /// <summary>
         /// Performs an AABB collision check against a MonoGame Rectangle
         /// </summary>
@@ -171,5 +156,19 @@ namespace Emissary
             return false;
         }
 
+        //Operator Overloads:
+        /// <summary>
+        /// Adds the X and Y values of a Vector2 to the X and Y coordinates of the FloatRectangle
+        /// </summary>
+        /// <param name="rect">Rectangle having its values changed</param>
+        /// <param name="changeInPosition">positional change</param>
+        /// <returns>A FloatRectangle with the positional updates</returns>
+        public static FloatRectangle operator +(FloatRectangle rect, Vector2 changeInPosition)
+        {
+            float newX = rect.x + changeInPosition.X;
+            float newY = rect.y + changeInPosition.Y;
+
+            return new FloatRectangle(newX, newY, rect.Width, rect.Height);
+        }
     }
 }

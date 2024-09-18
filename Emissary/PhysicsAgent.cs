@@ -26,6 +26,9 @@ namespace Emissary
         protected Vector2 velocity;
         protected Vector2 totalForce;
 
+        //Vector2 direction of the PhysicsAgent
+        protected Vector2 direction;
+
         protected Vector2 maxVelocity;
         protected Vector2 maxForce;
 
@@ -104,6 +107,9 @@ namespace Emissary
 
             //applying the velocity to the position
             hitbox.Position += velocity;
+
+            //calculating the direction
+            direction = Vector2.Normalize(velocity);
         }
 
         /// <summary>
@@ -141,9 +147,9 @@ namespace Emissary
             //finding the location of the projected wander circle
             Vector2 futurePosition = CalcFuturePosition(time);
 
-            timer--; ;
+            timer--;
             if (timer <= 0)
-            {
+            {                
                 wanderAngle = (float)(rng.NextDouble() * (Math.PI * 2));
                 timer = 30;
             }
@@ -180,28 +186,6 @@ namespace Emissary
         /// </summary>
         public override void Draw()
         {
-            //---------------------------------------------------------------------------
-            //                      Debug Rendering
-            Globals.SB.Begin();
-            Globals.SB.DrawString(
-                Globals.SF,
-                $"{wanderAngle}",
-                new Vector2(800, 50),
-                Color.Blue);
-
-            Globals.SB.Draw(
-                Globals.GameTextures["DebugImage"],
-                new Vector2(hitbox.X + hitbox.Width / 2, hitbox.Y + hitbox.Height / 2),
-                new Rectangle(0, 0, 1000, 100),
-                Color.Crimson,
-                wanderAngle,
-                Vector2.Zero,
-                0.1f,
-                SpriteEffects.None,
-                0f);
-            Globals.SB.End();
-            //---------------------------------------------------------------------------
-
             DrawAgent();
         }
 
@@ -257,6 +241,7 @@ namespace Emissary
             //return Vector(0, 0) if the object is within bounds
             return Vector2.Zero;
         }
+
 
     }
 }
