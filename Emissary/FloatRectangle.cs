@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http.Headers;
 
-namespace Emissary
+namespace XXXXXX
 {
     /// <summary>
     /// Custom Rectangle struct using only Float values in order to better perform vector based
@@ -17,7 +10,6 @@ namespace Emissary
     /// </summary>
     public struct FloatRectangle
     {
-
         //Fields:
         private float x;
         private float y;
@@ -25,11 +17,14 @@ namespace Emissary
         private float height;
 
         //Properties:
-        //gets the FloatRectangle as a MonoGame Rectangle
+        /// <summary>
+        /// Essentially casting the Vectangle to a MonoGame Rectangle
+        /// </summary>
         public Rectangle ToRectangle
         {
             get
             {
+                //returning a MonoGame Rectangle
                 return new Rectangle(
                     (int)x,
                     (int)y,
@@ -38,6 +33,9 @@ namespace Emissary
             }
         }
 
+        /// <summary>
+        /// Get/sets the Vector2 coordinates of the FloatRectangle
+        /// </summary>
         public Vector2 Position
         {
             get { return new Vector2(x, y); }
@@ -48,37 +46,60 @@ namespace Emissary
             }
         }
 
-        //getter/setter for the Height of the rectangle
+        /// <summary>
+        /// Get/set for the Height of the FloatRectangle
+        /// </summary>
         public float Height
         {
             get { return height; }
             set { height = value; }
         }
 
-        //getter/setter for the Width of the rectangle
+        /// <summary>
+        /// Get/set for the Width of the FloatRectangle
+        /// </summary>
         public float Width
         {
             get { return width; }
             set { width = value; }
         }
 
-        //getter/setter for the X position of the rectangle
+        /// <summary>
+        /// Gets/sets the X coordinate of the FloatRectangle
+        /// </summary>
         public float X
         {
             get { return x; }
             set { x = value; }
         }
 
-        //getter/setter for the Y position of the rectangle
+        /// <summary>
+        /// Get/set the Y coordinate of the FloatRectangle
+        /// </summary>
         public float Y
         {
             get { return y; }
             set { y = value; }
         }
 
-        //Top right and bottom left bounds of the rectangle used for collisions
+        /// <summary>
+        /// Static property to get an empty FloatRectangle
+        /// </summary>
+        public static FloatRectangle Empty
+        {
+            get { return new FloatRectangle(0, 0, 0, 0); }
+        }
+
+        #region PRIVATE PROPERTIES FOR CONTAINS METHOD
+        /// <summary>
+        /// Calculates the top right of the FloatRectangle
+        /// </summary>
         private float TopRight { get { return x + width; } }
+        /// <summary>
+        /// Calculates the bottom left of the FloatRectangle
+        /// </summary>
         private float BottomLeft { get { return x + height; } }
+        #endregion
 
         //Constructors:
         /// <summary>
@@ -97,7 +118,7 @@ namespace Emissary
         }
 
         /// <summary>
-        /// Parameterized constructor containing default width/height of 50
+        /// Parameterized constructor containing default width/height of 100
         /// </summary>
         /// <param name="x">Top left X position</param>
         /// <param name="y">Top left Y position</param>
@@ -105,8 +126,8 @@ namespace Emissary
         {
             this.x = x;
             this.y = y;
-            width = 50f;
-            height = 50f;
+            width = 100f;
+            height = 100f;
         }
 
         /// <summary>
@@ -122,6 +143,18 @@ namespace Emissary
             this.height = size.Y;
         }
 
+        /// <summary>
+        /// Parameterized constructor to turn a MonoGame Rectangle into a FloatRectangle
+        /// </summary>
+        /// <param name="rect">rectangle being turned into a FloatRectangle</param>
+        public FloatRectangle(Rectangle rect)
+        {
+            this.x = rect.X;
+            this.y = rect.Y;
+            this.width = rect.Width;
+            this.height = rect.Height;
+        }
+
         //Methods:
         /// <summary>
         /// Checks if the FloatRectangle contains a point
@@ -130,12 +163,19 @@ namespace Emissary
         /// <returns>Whether or not the Point is in the FloatRectangle</returns>
         public bool Contains(Point location)
         {
-            if (location.X < TopRight && location.X > x &&
-                location.Y < BottomLeft && location.Y > y)
-            {
-                return true;
-            }
-            return false;
+            return location.X < this.TopRight && location.X > x &&
+                   location.Y < this.BottomLeft && location.Y > y;
+        }
+
+        /// <summary>
+        /// Checks if the FloatRectangle contains a Vector2
+        /// </summary>
+        /// <param name="location">Vector being checked</param>
+        /// <returns>Whether or not the Point is in the FloatRectangle</returns>
+        public bool Contains(Vector2 location)
+        {
+            return location.X < this.TopRight && location.X > x &&
+                   location.Y < this.BottomLeft && location.Y > y;
         }
 
         /// <summary>
@@ -143,17 +183,27 @@ namespace Emissary
         /// </summary>
         /// <param name="rect">Rectangle being checked against</param>
         /// <returns>whether or not a collision has occured</returns>
-        public bool AABBCheck(Rectangle rect)
+        public bool Intersects(Rectangle rect)
         {
             //Determining whether a collision has occurred
-            if (rect.X < (this.x + this.width) &&
-                (rect.X + rect.Width) > this.x &&
-                rect.Y < (this.y + this.height) &&
-                (rect.Y + rect.Height) > this.y)
-            {
-                return true;
-            }
-            return false;
+            return rect.X < (this.x + this.width) &&
+                   (rect.X + rect.Width) > this.x &&
+                   rect.Y < (this.y + this.height) &&
+                   (rect.Y + rect.Height) > this.y;
+        }
+
+        /// <summary>
+        /// Performs an AABB collision check against another FloatRectangle
+        /// </summary>
+        /// <param name="vect">Vectangle being checked against</param>
+        /// <returns>whether or not a collision has occured</returns>
+        public bool Intersects(Vectangle vect)
+        {
+            //Determining whether a collision has occurred
+            return vect.X < (this.x + this.width) &&
+                   (vect.X + vect.Width) > this.x &&
+                   vect.Y < (this.y + this.height) &&
+                   (vect.Y + vect.Height) > this.y;
         }
 
         //Operator Overloads:
@@ -165,9 +215,27 @@ namespace Emissary
         /// <returns>A FloatRectangle with the positional updates</returns>
         public static FloatRectangle operator +(FloatRectangle rect, Vector2 changeInPosition)
         {
+            //performing the proper arithmetic to the Position Vector within the Vectangle
             float newX = rect.x + changeInPosition.X;
             float newY = rect.y + changeInPosition.Y;
 
+            //returning the new Vectangle with the new Position Vector
+            return new Vectangle(newX, newY, rect.Width, rect.Height);
+        }
+
+        /// <summary>
+        /// Adds the X and Y values of a Vector2 to the X and Y coordinates of the FloatRectangle
+        /// </summary>
+        /// <param name="rect">Rectangle having its values changed</param>
+        /// <param name="changeInPosition">positional change</param>
+        /// <returns>A FloatRectangle with the positional updates</returns>
+        public static FloatRectangle operator -(FloatRectangle rect, Vector2 changeInPosition)
+        {
+            //performing the proper arithmetic to the Position Vector within the FloatRectangle
+            float newX = rect.x - changeInPosition.X;
+            float newY = rect.y - changeInPosition.Y;
+
+            //returning the new FloatRectangle with the new Position Vector
             return new FloatRectangle(newX, newY, rect.Width, rect.Height);
         }
     }
